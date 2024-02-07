@@ -2,8 +2,15 @@ import * as Dialog from "@radix-ui/react-dialog";
 import "./dialog.css";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { ReactNode } from "react";
+import { AlertDialog, Flex } from "@radix-ui/themes";
 
 interface RadixDialogProps {
+  triggerContent: ReactNode;
+  saveContent: ReactNode;
+  dialogContent: ReactNode;
+}
+
+interface RadixAlertDialogProps {
   triggerContent: ReactNode;
   saveContent: ReactNode;
   dialogContent: ReactNode;
@@ -30,5 +37,23 @@ export function RadixDialog({
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  );
+}
+
+export function RadixAlertDialog({
+  triggerContent,
+  saveContent,
+  dialogContent,
+}: RadixAlertDialogProps) {
+  return (
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>{triggerContent}</AlertDialog.Trigger>
+      <AlertDialog.Content style={{ maxWidth: 450 }}>
+        {dialogContent}
+        <Flex gap="3" mt="4" justify="end">
+          {saveContent}
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 }
