@@ -1,4 +1,4 @@
-import { Pizza } from "../store";
+import { Pizza } from "../store/pizza.types";
 import { PizzaDeleteDialog } from "./PizzaDeleteDialog";
 
 export default function PizzaCard(pizza: Pizza) {

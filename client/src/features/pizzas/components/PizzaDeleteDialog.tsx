@@ -1,5 +1,6 @@
 import { RadixAlertDialog } from "../../../UI/Elements/Dialog";
-import { AlertDialog, Button, IconButton } from "@radix-ui/themes";
+import { IconButton } from "@radix-ui/themes";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Cross1Icon } from "@radix-ui/react-icons";
 
 type PizzaDeleteDialogProps = {
@@ -16,27 +17,27 @@ export function PizzaDeleteDialog({ onClick }: PizzaDeleteDialogProps) {
           </IconButton>
         </div>
       }
-      saveContent={
-        <>
-          <AlertDialog.Cancel>
-            <Button variant="soft" color="gray">
-              Cancel
-            </Button>
-          </AlertDialog.Cancel>
-          <AlertDialog.Action>
-            <Button variant="solid" color="red" onClick={onClick}>
-              Delete
-            </Button>
-          </AlertDialog.Action>
-        </>
-      }
       dialogContent={
         <>
-          <AlertDialog.Title>Delete a Pizza</AlertDialog.Title>
-          <AlertDialog.Description size="2">
+          <AlertDialog.Title className="AlertDialogTitle">
+            Are you absolutely sure?
+          </AlertDialog.Title>
+          <AlertDialog.Description className="AlertDialogDescription">
             Are you sure? This pizza will be deleted.
           </AlertDialog.Description>
         </>
+      }
+      saveContent={
+        <div className="flex gap-4 justify-end">
+          <AlertDialog.Cancel asChild>
+            <button className="Button mauve">Cancel</button>
+          </AlertDialog.Cancel>
+          <AlertDialog.Action asChild>
+            <button className="Button red" onClick={onClick}>
+              Yes, delete Pizza
+            </button>
+          </AlertDialog.Action>
+        </div>
       }
     />
   );
