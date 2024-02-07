@@ -1,10 +1,12 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	db "github.com/strbrgr/pizze/server/db"
 )
 
 type pizza struct {
@@ -14,50 +16,48 @@ type pizza struct {
 	Toppings []string `json:"toppings"`
 }
 
-var pizzas = []pizza{
-	{ID: "1", Title: "Margherita", Sauce: "Tomato", Toppings: []string{"Cheese", "Basil"}},
-	{ID: "2", Title: "Pepperoni", Sauce: "Tomato", Toppings: []string{"Cheese", "Pepperoni"}},
-	{ID: "3", Title: "Vegetarian", Sauce: "Pesto", Toppings: []string{"Cheese", "Tomato", "Mushrooms", "Bell Peppers"}},
-}
+func main() {
+	r := gin.Default()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Printf("Listening on port %s", port)
+	db, cleanup := db.GetDB()
+	defer cleanup()
 
-func getPizzas(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, pizzas)
-	return
-}
-
-func getPizzaByID(c *gin.Context) {
-	id := c.Param("id")
-
-	for _, p := range pizzas {
-		if p.ID == id {
-			c.IndentedJSON(http.StatusOK, p)
+	// Define a route for handling GET requests on /api/v1/pizzas
+	r.GET("/api/v1/pizzas", func(c *gin.Context) {
+		// Query the pizzas table
+		rows, err := db.Query("SELECT * FROM pizzas")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error querying pizzas"})
 			return
 		}
-	}
+		defer rows.Close()
 
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "pizza not found"})
-}
+		// Iterate through the rows and build a response
+		var pizzas []map[string]interface{}
+		for rows.Next() {
+			var id int
+			var title, sauce string
+			var toppings []string
 
-func postPizza(c *gin.Context) {
-	var newPizza pizza
+			if err := rows.Scan(&id, &title, &sauce, &toppings); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Error scanning rows"})
+				return
+			}
 
-	if err := c.BindJSON(&newPizza); err != nil {
-		return
-	}
-
-	pizzas = append(pizzas, newPizza)
-	c.IndentedJSON(http.StatusCreated, newPizza)
-}
-
-func main() {
-	router := gin.Default()
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173"}
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-
-	router.Use(cors.New(config))
-	router.GET("/api/v1/pizzas", getPizzas)
-	router.GET("/api/v1/pizzas:id", getPizzaByID)
-	router.POST("/api/v1/pizzas", postPizza)
-	router.Run("localhost:8080")
+			pizza := map[string]interface{}{
+				"id":       id,
+				"title":    title,
+				"sauce":    sauce,
+				"toppings": toppings,
+			}
+			pizzas = append(pizzas, pizza)
+		}
+		// Return the pizzas as JSON
+		c.JSON(http.StatusOK, pizzas)
+	})
+	r.Run(":" + port)
 }
