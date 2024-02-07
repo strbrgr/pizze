@@ -1,8 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import "./dialog.css";
+import "./alertDialog.css";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { ReactNode } from "react";
-import { AlertDialog, Flex } from "@radix-ui/themes";
 
 interface RadixDialogProps {
   triggerContent: ReactNode;
@@ -10,16 +11,10 @@ interface RadixDialogProps {
   dialogContent: ReactNode;
 }
 
-interface RadixAlertDialogProps {
-  triggerContent: ReactNode;
-  saveContent: ReactNode;
-  dialogContent: ReactNode;
-}
-
 export function RadixDialog({
   triggerContent,
-  saveContent,
   dialogContent,
+  saveContent,
 }: RadixDialogProps) {
   return (
     <Dialog.Root>
@@ -42,18 +37,19 @@ export function RadixDialog({
 
 export function RadixAlertDialog({
   triggerContent,
-  saveContent,
   dialogContent,
-}: RadixAlertDialogProps) {
+  saveContent,
+}: RadixDialogProps) {
   return (
     <AlertDialog.Root>
-      <AlertDialog.Trigger>{triggerContent}</AlertDialog.Trigger>
-      <AlertDialog.Content style={{ maxWidth: 450 }}>
-        {dialogContent}
-        <Flex gap="3" mt="4" justify="end">
+      <AlertDialog.Trigger asChild>{triggerContent}</AlertDialog.Trigger>
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay className="AlertDialogOverlay" />
+        <AlertDialog.Content className="AlertDialogContent">
+          {dialogContent}
           {saveContent}
-        </Flex>
-      </AlertDialog.Content>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
     </AlertDialog.Root>
   );
 }
