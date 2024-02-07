@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import "./App.css";
+import "./UI/Layout/index.css";
 import { AppRoutes } from "./routes";
 import AppProvider from "./AppProvider";
 
