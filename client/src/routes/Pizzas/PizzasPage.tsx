@@ -1,6 +1,14 @@
-import { useAppSelector } from "../../hooks/useAppSelector";
+import { Button } from "@radix-ui/themes";
+import { Container } from "../../UI/Elements/Container/Container";
+import PizzaList from "../../features/pizzas/components/PizzaList";
 
 export default function PizzasPage() {
-  const pizzas = useAppSelector((state) => state.pizza);
-  return <>{JSON.stringify(pizzas)}</>;
+  return (
+    <>
+      <Container>
+        <PizzaList />
+        <Button>T</Button>
+      </Container>
+    </>
+  );
 }
