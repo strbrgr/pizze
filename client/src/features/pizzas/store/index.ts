@@ -1,10 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-type Pizza = {
-  id: number;
-  name: string;
-  toppings: string[];
-};
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Pizza } from "./pizza.types";
 
 const initialState: Pizza[] = [
   {
@@ -28,9 +23,8 @@ export const pizzaSlice = createSlice({
   name: "pizza",
   initialState,
   reducers: {
-    // setPizza: (state, action) => {
-    // const { key, value } = action.payload;
-    // state[key] = value;
-    // },
+    addPizza: (state, action: PayloadAction<Pizza>) => {
+      return [...state, action.payload];
+    },
   },
 });
