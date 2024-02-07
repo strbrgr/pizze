@@ -1,9 +1,10 @@
-import { IconButton } from "@radix-ui/themes";
 import { Pizza } from "../store";
-import { Cross1Icon } from "@radix-ui/react-icons";
+import { PizzaDeleteDialog } from "./PizzaDeleteDialog";
 
 export default function PizzaCard(pizza: Pizza) {
-  function handleDeleteClick() {}
+  function handleDeleteClick() {
+    console.log("deleted");
+  }
 
   return (
     <li
@@ -12,9 +13,7 @@ export default function PizzaCard(pizza: Pizza) {
     >
       <div className="flex justify-between items-center">
         <h3 className="font-bold">{pizza.name}</h3>
-        <IconButton size="1" onClick={handleDeleteClick}>
-          <Cross1Icon width="10" height="10" />
-        </IconButton>
+        <PizzaDeleteDialog onClick={handleDeleteClick} />
       </div>
 
       {pizza.toppings.map((t) => (
