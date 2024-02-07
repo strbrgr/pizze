@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./UI/Layout/index.css";
+import "@radix-ui/themes/styles.css";
 import { AppRoutes } from "./routes";
 import AppProvider from "./AppProvider";
 
